@@ -1,28 +1,19 @@
+import glob
 import json
 import time
 import logger
-from kafka import KafkaProducer
+
+from utils import create_kafka_producer
 
 
 def consume_data(data_file=None):
     if data_file is None:
-        data_file = "./data/stream.jsonl"
+        data_file = glob.glob("data/*")[0]
       
-    with open('./data/stream.jsonl', 'r') as json_file:
+    with open(data_file, 'r') as json_file:
         json_list = list(json_file)
 
     return json_list
-
-
-def create_kafka_producer(kafka_host=None):
-    if kafka_host is None:
-        kafka_host = "localhost:9092"
-
-    producer = KafkaProducer(
-        bootstrap_servers=kafka_host
-    )
-
-    return producer
 
 
 def receipt(err, msg):
@@ -34,7 +25,13 @@ def receipt(err, msg):
         print(message)
 
 def produce():
-    producer = create_kafka_producer()
+    producer = None
+    try:
+        producer = create_kafka_producer()
+    except:
+        print("Error occured on producer creation...")
+        return
+
     data_set = consume_data()
     key_list = ["uid", "ts"]
     

@@ -1,44 +1,41 @@
 import json
 import time
-import logger
 
-from kafka import KafkaConsumer
 from collections import defaultdict
+from utils import create_kafka_consumer, create_kafka_producer
 
 
 HOUR = 60
 USER_TOPIC = "user-tracker"
 
-def create_kafka_consumer(kafka_host=None):
-    if kafka_host is None:
-        kafka_host = "localhost:9092"
 
-    consumer = KafkaConsumer(
-        bootstrap_servers=kafka_host,
-        group_id="python-consumer",
-        auto_offset_reset="earliest",
-    )
-    logger.logger.info('Kafka Consumer has been initiated...')
-    return consumer
-
-
-def filter_stale_entries(dictionary, threshold_ts):
+def filter_stale_entries(dictionary, threshold_ts, producer):
     keys = dictionary.keys()
     tobe_filtered = list(filter(lambda x: int(x) > threshold_ts, keys))
     for stale_entry in tobe_filtered:
         item = dictionary.pop(stale_entry, None)
-        print(f"For timestamp {stale_entry} there are {len(item)} unique keys")
+        # Collecting the data that got out of the slide window frame
+        unique_users_per_minute = len(item)
+        message = {
+            "created": time.time(),
+            "data": {
+                "unique_users_per_minute": unique_users_per_minute
+            },
+        }
+        print(f"For timestamp {stale_entry} there are {unique_users_per_minute} unique keys")
+        producer.send('user-data', message.encode('utf-8'))
+        producer.flush()
     return dictionary
         
 
 def consume():
-    consumer = create_kafka_consumer()
-    # available_topics = consumer.topics()
-    # print('Available topics to consume: ', available_topics)
-    # user_topic = available_topics.pop()
-    # if user_topic is None:
-    #     logger.logger.info("No topic found, ending program...")
-    #     return
+    producer = None
+    consumer = None
+    try:
+        consumer = create_kafka_consumer()
+        producer = create_kafka_producer()
+    except:
+        print("Error occured on consumer creation...")
     consumer.subscribe([USER_TOPIC])
     user_dict = defaultdict()
     max_key = 0
@@ -82,7 +79,7 @@ def consume():
 
             min_key = int(max_key) - HOUR
 
-            user_dict = filter_stale_entries(user_dict, min_key) if tobe_filtered else user_dict
+            user_dict = filter_stale_entries(user_dict, min_key, producer) if tobe_filtered else user_dict
 
             if rounded_ts < min_key:
                 miss_count += 1
