@@ -18,9 +18,10 @@ def filter_stale_entries(dictionary, threshold_ts, producer):
                 "unique_users_per_minute": unique_users_per_minute
             },
         }
-        print(f"For timestamp {stale_entry} there are {unique_users_per_minute} unique keys")
+        message = json.dumps(message)
         producer.send(RESULT_USER_TOPIC, message.encode('utf-8'))
         producer.flush()
+        print(f"For timestamp {stale_entry} there are {unique_users_per_minute} unique keys")
     return dictionary
         
 
