@@ -7,18 +7,18 @@
 - Place the data file (ex. stream.jsonl) in the data folder, name of the file is not important, the first one in the dict will be used
 
 - Run the producer (python script):
-- - Create virtual env ``` virtualenv venv ```
-- - Activate the env ``` source venv/bin/activate ```
-- - Install the packages ``` pip install -r requirements/local.txt ```
-- - Run the script ``` python3 src/producer.py ```
+1. Create virtual env ``` virtualenv venv ```
+2. Activate the env ``` source venv/bin/activate ```
+3. Install the packages ``` pip install -r requirements/local.txt ```
+4. Run the script ``` python3 src/producer.py ```
 
 - Run the logic consumer (python script)
-- - Activate the env ``` source venv/bin/activate ```
-- - Run the script ``` python3 src/logic_consumer.py ```
+1. Activate the env ``` source venv/bin/activate ```
+2. Run the script ``` python3 src/logic_consumer.py ```
 
 - Run the result consumer (python script)
-- - Activate the env ``` source venv/bin/activate ```
-- - Run the script ``` python3 src/result_consumer.py ```
+1. Activate the env ``` source venv/bin/activate ```
+2. Run the script ``` python3 src/result_consumer.py ```
 
 Trying to achieve: 
 - Run the producer in a container
