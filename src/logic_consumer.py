@@ -3,11 +3,7 @@ import time
 
 from collections import defaultdict
 from utils import create_kafka_consumer, create_kafka_producer
-
-
-HOUR = 60
-USER_TOPIC = "user-tracker"
-
+from consts import HOUR, USER_TOPIC, RESULT_USER_TOPIC
 
 def filter_stale_entries(dictionary, threshold_ts, producer):
     keys = dictionary.keys()
@@ -23,7 +19,7 @@ def filter_stale_entries(dictionary, threshold_ts, producer):
             },
         }
         print(f"For timestamp {stale_entry} there are {unique_users_per_minute} unique keys")
-        producer.send('user-data', message.encode('utf-8'))
+        producer.send(RESULT_USER_TOPIC, message.encode('utf-8'))
         producer.flush()
     return dictionary
         
