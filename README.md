@@ -1,13 +1,5 @@
 # Data Engineer Solution by Marko Babic
 
-### Requirements:
-- write a report: what did you do? what was the reasons you did it like that?
-- measure at least one performance metric (e.g. frames per second)
-- document your approach on how you decide **when** to output the data 
-- document the estimated error in counting
-- it should be possible to ingest historical data. e.g. from the last 2 years.
-
-
 ### RUNNING THE SOLUTION (OS X)
 
 - You should have docker and python installed on your machine
@@ -21,13 +13,12 @@ Trying to achieve:
 
 ### REPORT
 
-#### You want to display the results as soon as possible
+My solution for this challange is based on the sliding window technique. Beacause of the request to ingest historical data, the solution could not be based on the slide frame around the current time, instead I am using the data from the stream and use the most up-to-date time as the reference for the slide. The task says I should assume that all response is within the 5 seconds delay from the current moment, but for the solution to be as much realistic as it could be I didn't take that assumption, and I left the current logic with an hour long window slide so we could have as much accurate data as it can be. Every log that is out of the slide is viewed as a mistake and it's used to calculate the error rate. 
 
-- Tradeoff, accurracy vs latency of calculation
 
 #### Document your approach on how you decide when to output the data
 
-- After the sliding window
+- In this solution the data is outputed when it get's out of the window slide. That suggests that we have a tradef between latency and accuracy. Larger window slide -> more accurate data -> higher latancy. Smaller window slide -> lower latancy -> lower accuracy of data. 
 
 ### MEASURED PERFORMANCE METRICS / BENCHMARKING
 
@@ -35,7 +26,9 @@ Currently in the code I measure next topics:
 
 - Frames consumed per second
 - Framed produced per second
-- Error rate 
+- Error rate
+
+Benchmarking is/should be done with different sizes of window slides.
 
 ### ERROR RATE
 
@@ -43,8 +36,8 @@ Currently in the code I measure next topics:
 
 ### SCALABILITY
 
-- Scaling the number of consumers and producers
-- Spliting data into mulitple partitions and combining into single frames on the end
+- Scaling the number of consumers, producers and brokers would benefit the amount of data that we could simultaneously consume, produce and make it more persistan in case of broker failure
+- We could also split the storing topic into multiple partitions and split the data, in our case, based on different minute of the window slide offset, or some other decision, where we could benefit with faster data processing but with aggregation in the end
 
 ###  EDGE CASES
 
