@@ -35,7 +35,7 @@ services:
       - zookeeper
       - broker
     volumes:
-      - ./data:/data
+      - ./data:/producer/src/data
 
   logic_consumer:
     build:

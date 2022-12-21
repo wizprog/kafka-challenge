@@ -29,8 +29,14 @@ Trying to achieve:
 #### Running and reading from docker
 
 1. Build all containers by running ``` docker-compose -f local.yml build ```
-2. Start all containers by runnnig ``` docker-compose -f local.yml up -d ```
-3. Read the output by running ``` docker logs -f producer , docker logs -f logic_consumer or docker logs -f result_consumer```
+2. Start all containers by runnnig ``` docker-compose -f local.yml up -d zookeeper broker ```
+3. Create the user-tracker topic by runnning ``` docker-compose -f local.yml exec broker kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic user-tracker ```
+4. Create the user-data topic by running ``` docker-compose -f local.yml exec broker kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic user-data ```
+5. Producer can't start producing if zooker and broker are not runnnig, so wait a couple of seconds before starting the producer by running ``` docker-compose -f local.yml up -d producer```
+6. Start the logic_consumer and result_consumer by running ``` docker-compose -f local.yml up -d logic_consumer result_consumer```
+7. Read the output by running ``` docker logs -f producer , docker logs -f logic_consumer or docker logs -f result_consumer```
+
+- For some reason docker solution is not effeacent enough and it produce the data really slow. My suggestion would be to run the producer with a script and then use the containers for consumers. Unforunatly I didn't have time to fix this.
 
 ### REPORT
 
@@ -75,3 +81,7 @@ Benchmarking is/should be done with different sizes of window slides.
 #### Create topic
 
 ``` docker-compose -f local.yml exec broker kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic user-tracker ```
+
+#### List topics
+
+``` docker-compose -f local.yml exec broker kafka-topics --list --bootstrap-server localhost:9092 ```
