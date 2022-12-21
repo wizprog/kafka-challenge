@@ -25,27 +25,23 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
 
-  # logic_consumer:
-  #   build:
-  #     context: .
-  #     dockerfile: ./compose/local/consumer/logic/Dockerfile
-  #   image: kafka_consumer
-  #   container_name: consumer
-  #   depends_on:
-  #     - zookeeper
-  #     - broker
-  #   install:
-  #     - requirements: ./requirements/local.txt
+  logic_consumer:
+    build:
+      context: .
+      dockerfile: ./compose/local/consumer/logic/Dockerfile
+    image: kafka_logic_consumer
+    container_name: logic_consumer
+    depends_on:
+      - zookeeper
+      - broker
 
-  # result_consumer:
-  #   build:
-  #     context: .
-  #     dockerfile: ./compose/local/consumer/result/Dockerfile
-  #   image: kafka_consumer
-  #   container_name: consumer
-  #   depends_on:
-  #     - zookeeper
-  #     - broker
-  #   install:
-  #     - requirements: ./requirements/local.txt
+  result_consumer:
+    build:
+      context: .
+      dockerfile: ./compose/local/consumer/result/Dockerfile
+    image: kafka_result_consumer
+    container_name: result_consumer
+    depends_on:
+      - zookeeper
+      - broker
     

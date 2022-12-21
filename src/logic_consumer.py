@@ -29,10 +29,11 @@ def consume():
     producer = None
     consumer = None
     try:
-        consumer = create_kafka_consumer()
+        consumer = create_kafka_consumer(kafka_host="broker:9092")
         producer = create_kafka_producer()
     except:
         print("Error occured on consumer creation...")
+        return
     consumer.subscribe([USER_TOPIC])
     user_dict = defaultdict()
     max_key = 0

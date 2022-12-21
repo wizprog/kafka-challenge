@@ -6,7 +6,7 @@ from consts import RESULT_USER_TOPIC
 def consume():
     consumer = None
     try:
-        consumer = create_kafka_consumer()
+        consumer = create_kafka_consumer(kafka_host="broker:9092")
     except:
         print("Error occured on consumer creation...")
 

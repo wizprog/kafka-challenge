@@ -15,15 +15,6 @@ def consume_data(data_file=None):
 
     return json_list
 
-
-def receipt(err, msg):
-    if err is not None:
-        print('Error: {}'.format(err))
-    else:
-        message = 'Produced message on topic {} with value of {}\n'.format(msg.topic(), msg.value().decode('utf-8'))
-        logger.logger.info(message)
-        print(message)
-
 def produce():
     producer = None
     try:

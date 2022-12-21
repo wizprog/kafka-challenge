@@ -1,6 +1,9 @@
 FROM python:latest
 
-WORKDIR /consumer/src
-COPY src/consumer.py ./
+WORKDIR /result_consumer/src
+COPY /src ./
+COPY /requirements ./requirements
+
+RUN pip install -r requirements/local.txt
 
 CMD [ "python", "./result_consumer.py"]
