@@ -6,6 +6,8 @@
 - Start the containers by running: ``` docker-compose -f local.yml up -d ```
 - Place the data file (ex. stream.jsonl) in the data folder, name of the file is not important, the first one in the dict will be used
 
+#### Running like scripts 
+
 - Run the producer (python script):
 1. Create virtual env ``` virtualenv venv ```
 2. Activate the env ``` source venv/bin/activate ```
@@ -23,6 +25,12 @@
 Trying to achieve: 
 - Run the producer in a container
 - Run the consumers in containers
+
+#### Running and reading from docker
+
+1. Build all containers by running ``` docker-compose -f local.yml build ```
+2. Start all containers by runnnig ``` docker-compose -f local.yml up -d ```
+3. Read the output by running ``` docker logs -f producer , docker logs -f logic_consumer or docker logs -f result_consumer```
 
 ### REPORT
 

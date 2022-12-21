@@ -6,4 +6,4 @@ COPY /requirements ./requirements
 
 RUN pip install -r requirements/local.txt
 
-CMD [ "python", "./result_consumer.py"]
+CMD [ "python", "-u", "./result_consumer.py"]

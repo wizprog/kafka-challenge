@@ -6,4 +6,4 @@ COPY /requirements ./requirements
 
 RUN pip install -r requirements/local.txt
 
-CMD [ "python", "./logic_consumer.py"]
+CMD [ "python", "-u", "./logic_consumer.py"]

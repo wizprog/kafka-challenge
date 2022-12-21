@@ -8,22 +8,31 @@ from utils import create_kafka_producer
 
 def consume_data(data_file=None):
     if data_file is None:
-        data_file = glob.glob("data/*")[0]
+        directory_files = glob.glob("data/*")
+        if directory_files:
+            data_file = directory_files[0]
+        else:
+            print("No data file found...")
+            return None
       
     with open(data_file, 'r') as json_file:
         json_list = list(json_file)
+        print("Data file read...")
 
     return json_list
 
 def produce():
     producer = None
     try:
-        producer = create_kafka_producer()
+        producer = create_kafka_producer(kafka_host="broker:9092")
     except:
         print("Error occured on producer creation...")
         return
 
     data_set = consume_data()
+    if data_set is None:
+        return
+
     key_list = ["uid", "ts"]
     
     start_time = time.time()

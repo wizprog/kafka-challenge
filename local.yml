@@ -25,6 +25,18 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
 
+  producer:
+    build:
+      context: .
+      dockerfile: ./compose/local/producer/Dockerfile
+    image: kafka_producer
+    container_name: producer
+    depends_on:
+      - zookeeper
+      - broker
+    volumes:
+      - ./data:/data
+
   logic_consumer:
     build:
       context: .
